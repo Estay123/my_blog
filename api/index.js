@@ -1,14 +1,31 @@
 const express = require("express");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 const connectDB = require("./db");
 const UserModel = require("./models/User");
 const jwt = require("jsonwebtoken");
 const BlogModel = require("./models/Blog");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
+// const storage = multer.diskStorage({
+//   dest: "uploads/",
+//   destination: function (req, file, cb) {
+//     console.log(file);
+//     cb(null, "uploads/");
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, `${Date.now()}_${file.originalname}`);
+//   },
+// });
+// const upload = multer({ storage });
 
 const app = express();
 
 app.use(cors());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+
+app.listen(4000);
 
 app.post("/register", async (req, res) => {
   connectDB();
@@ -54,15 +71,34 @@ app.post("/logout", (req, res) => {
   res.removeAllListeners.id("userDoc.id");
   return res.json({ message: "Logged out" });
 });
-app.listen(4000);
 
 app.get("/posts", async (req, res) => {
   const posts = await BlogModel.find();
   res.json(posts);
 });
 
-app.post("/posts", async (req, res) => {
-  const newBlog = new Post(req.body);
-  const savedBlog = await newPost.save();
-  res.json(savedBlog);
+app.post("/posts", upload.single("file"), async (req, res) => {
+  let title = req.body.title;
+  let file = req.file;
+  let summary = req.body.summary;
+  let paragraph = req.body.paragraph;
+  let author = req.body.author;
+  let date = req.body.date;
+
+  console.log(req.body);
+  console.log(req.body.title);
+  console.log(req.file);
+
+  const newBlog = new BlogModel({
+    title,
+    author,
+    date,
+    file: file.filename,
+    summary,
+    paragraph,
+  });
+  console.log(newBlog);
+
+  // const savedBlog = await newBlog.save();
+  res.json({ message: "ok" });
 });

@@ -131,3 +131,6 @@ p {
   max-height: 200px;
   max-width: 100%;
 }
+form.login h1 form.register h1 {
+  text-align: center;
+}

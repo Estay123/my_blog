@@ -21,8 +21,8 @@ export default function LoginPage() {
   }
 
   function handleSubmit(event) {
+    //取消事件的默認動作
     event.preventDefault();
-
     login({ username, password })
       .then((res) => res.json())
       .then((res) => {
