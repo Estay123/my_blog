@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 module.exports = function connectDB() {
-  const url = "mongodb://127.0.0.1:27017/blogWebsite";
+  const url = "mongodb://0.0.0.0:27017/blogWebsite";
 
   try {
     mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });

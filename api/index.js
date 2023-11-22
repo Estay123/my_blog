@@ -3,10 +3,12 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const connectDB = require("./db");
 const UserModel = require("./models/User");
+const blogModel = require("./models/Blog");
 const jwt = require("jsonwebtoken");
 const BlogModel = require("./models/Blog");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
+const fs = require("fs");
 // const storage = multer.diskStorage({
 //   dest: "uploads/",
 //   destination: function (req, file, cb) {
@@ -77,28 +79,40 @@ app.get("/posts", async (req, res) => {
   res.json(posts);
 });
 
-app.post("/posts", upload.single("file"), async (req, res) => {
-  let title = req.body.title;
-  let file = req.file;
-  let summary = req.body.summary;
-  let paragraph = req.body.paragraph;
-  let author = req.body.author;
-  let date = req.body.date;
-
-  console.log(req.body);
-  console.log(req.body.title);
-  console.log(req.file);
-
-  const newBlog = new BlogModel({
-    title,
-    author,
-    date,
-    file: file.filename,
-    summary,
-    paragraph,
-  });
-  console.log(newBlog);
-
-  // const savedBlog = await newBlog.save();
-  res.json({ message: "ok" });
+app.post("/post", upload.single("file"), (req, res) => {
+  const { orignalname } = req.file;
+  const parts = orignalname.split(".");
+  const ext = parts[parts.length - 1];
+  const newPath = path + "." + ext;
+  fs.renameSync(oath, newPath);
+  res.json({ files: req.file });
 });
+
+// app.post("/posts", upload.single("file"), async (req, res) => {
+//   let title = req.body.title;
+//   let file = req.file;
+//   let summary = req.body.summary;
+//   let paragraph = req.body.paragraph;
+//   let author = req.body.author;
+//   let date = req.body.date;
+
+//   const { originalname } = req.file;
+//   const parts = originalname.split(".");
+//   const ext = parts[parts.length - 1];
+//   fs.renameSync(req.file.path, req.file.path + "." + ext);
+//   const blogDoc = await BlogModel.create({
+//     title,
+//     summary,
+//     author,
+//     date,
+//     file: newPath,
+//     paragraph,
+//   });
+
+//   const savedBlog = await newBlog.save();
+//   // res.json({ blog: savedBlog, isSuccess: true });
+//   const newPath = fs.renameSync(path, newPath);
+
+//   console.log(savedBlog);
+//   res.json({ blogDoc });
+// });

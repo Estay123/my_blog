@@ -7,8 +7,9 @@ export default function CreatePost() {
   const [paragraph, setParagraph] = useState("");
   const [author, setAuthor] = useState("");
   const [date, setDate] = useState("");
+  const [redirect, setRedirect] = useState(false);
 
-  function createNewPost(event) {
+  async function createNewPost(event) {
     event.preventDefault();
     const data = new FormData();
     data.append("title", title);
@@ -17,20 +18,26 @@ export default function CreatePost() {
     data.append("paragraph", paragraph);
     data.append("author", author);
     data.append("date", date);
-
-    fetch("http://localhost:4000/posts", {
+    const response = fetch("http://localhost:4000/posts", {
       method: "POST",
       body: data,
-    }).then((response) => {
-      response
-        .json()
-        .then((body) => {
-          console.log(body);
-        })
-        .catch((error) => {
-          console.log("error: ", error);
-        });
     });
+    if (response.ok) {
+    }
+    setRedirect(true);
+    //   response
+    //     .json()
+    //     .then((body) => {
+    //       console.log(body);
+    //     })
+    //     .catch((error) => {
+    //       console.log("error: ", error);
+    //     });
+    // });
+  }
+
+  if (redirect) {
+    return <Navigate to={"/"} />;
   }
 
   return (
